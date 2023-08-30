@@ -1,4 +1,12 @@
-# Tarot Bot
+# Tarot AI
+
+🃏 deterministic rule-based tarot AI
+
+4️⃣ current version works for the classic 4 players game
+
+3️⃣ 5️⃣ variants coming soon !
+
+⚒️ available soon on https://tarot-mania.io/
 
 ## Requirements
 
@@ -24,11 +32,8 @@
 
 ## Get started
 
-The `src/game.ts` file contain the logic to communicate between your AI and the server during a game. It also contains the settings of the game your AI is about to play.
+- `src/ai.ts` contains the AI logic
+- `src/game.ts` contains the game settings and the communication logic between AI and server
+  - listen to events listed in `src/models/events/listen.events.ts`
+  - emit events listed in `src/models/events/emit.events.ts`
 
-The `src/artificial-intelligence.ts` file contain your Artificial Intelligence's logic to react to the game events.
-
-You can fin the list of events:
-
-- you can listen to in `src/models/events/listen.events.ts`
-- you can emit in `src/models/events/emit.events.ts`

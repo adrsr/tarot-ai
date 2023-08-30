@@ -39,6 +39,8 @@ export const AVATARS = [
   'turkey',
   'turtle',
   'unicorn',
+  'robot',
+  'robot-bis',
 ] as const;
 
 export type Avatar = typeof AVATARS[number];

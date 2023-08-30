@@ -1,80 +1,72 @@
-import { ArtificialIntelligence } from './artificial-intelligence';
+import { ArtificialIntelligence } from './ai';
 import { Client } from './client';
 import { RoomSettings } from './models/dto/create-room.dto';
+import { GameSize } from './models/tarot/game-state';
 import { WinConditionType } from './models/tarot/win-condition';
+import { Avatar } from './models/user';
 
 export class Game {
 
+  #gameSize: GameSize = 4;
+
   private readonly client = new Client({
-    userPseudo: 'Tarot Bot',
-    userAvatar: 'bee',
+    userPseudo: 'Tarot Bro',
+    userAvatar: ['robot', 'robot-bis'].map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value)[0] as Avatar,
   });
 
   private readonly roomSettings: RoomSettings = {
-    roomId: 'ai-test',
-    roomName: 'AI Test',
+    roomId: 'ai-test-empty',
+    roomName: 'AI Test Empty',
     roomPassword: 'AI Password',
-    gameSize: 4,
-    gameWinConditionValue: 1,
+    gameSize: this.#gameSize,
+    gameWinConditionValue: 10,
     gameWinConditionType: WinConditionType.GamesPlayed,
   };
 
-  private readonly artificialIntelligence = new ArtificialIntelligence();
+  private readonly ai = new ArtificialIntelligence();
 
   async start(): Promise<void> {
     await this.client.createOrJoinRoom(this.roomSettings);
 
+    /*
+      ON
+    */
+
     this.client.socket.on('game.state', (state) => {
-      console.log('Ready to start the game');
-      console.log(`You are at the position ${state.ownPosition}`);
+      if (state.ownPosition)
+        this.ai.position = state.ownPosition;
     });
 
     this.client.socket.on('game.handReceived', (hand) => {
-      console.log('New distribution');
-      console.log(hand);
+      this.ai.hand = hand;
     });
 
     this.client.socket.on('game.newTaker', (takerPosition) => {
-      console.log('Game started');
-      console.log(`Taker is at position ${takerPosition}`);
+      this.ai.takerPosition = takerPosition;
     });
 
     this.client.socket.on('game.cardPlayed', (playerPosition, playedCard) => {
-      console.log(`Player at position ${playerPosition} played ${JSON.stringify(playedCard)}`);
+      this.ai.playedCard = { playerPosition, playedCard };
     });
 
-    this.client.socket.on('game.trickWon', (playerPosition) => {
-      console.log(`Player at position ${playerPosition} won the trick`);
-    });
-
-    this.client.socket.on('game.finishedGame', (finishedGameState, matchState) => {
-      console.log('Game finished');
-      console.log(finishedGameState.scoringResult);
-
-      // The match cannot end in a draw, a new game will be started until a clear winner emerges
-      if (matchState.winnerPosition != null) {
-        console.log(`The winner of the match is at position ${matchState.winnerPosition}`);
-      }
-    });
-
-    this.client.socket.on('game.voidedGame', () => {
-      console.log('Game voided: all players passed');
-    });
+    /*
+      EMIT
+    */
 
     this.client.socket.on('game.bidRequest', (validBids) => {
-      this.client.socket.emit('game.makeBid', this.artificialIntelligence.makeBid(validBids));
+      this.client.socket.emit('game.makeBid', this.ai.makeBid(validBids));
     });
 
     this.client.socket.on('game.partnerCallRequest', (callableCards) => {
-      this.client.socket.emit('game.callPartner', this.artificialIntelligence.callPartner(callableCards));
+      this.client.socket.emit('game.callPartner', this.ai.callPartner(callableCards));
     });
 
     this.client.socket.on('game.asideRequest', (discardableCards) => {
-      this.client.socket.emit('game.setAside', this.artificialIntelligence.setAside(discardableCards));
+      this.client.socket.emit('game.setAside', this.ai.setAside(discardableCards));
     });
 
     this.client.socket.on('game.cardRequest', (playableCards) => {
-      this.client.socket.emit('game.playCard', this.artificialIntelligence.playCard(playableCards));
+      this.client.socket.emit('game.playCard', this.ai.playCard(playableCards));
     });
   }
 
