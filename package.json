@@ -2,11 +2,10 @@
   "name": "tarot-bot",
   "version": "0.0.0",
   "scripts": {
-    "build": "npm run clean && tsc --build && npm run assets && npm install --omit=dev --prefix=dist/tarot-bot",
+    "build": "npm run clean && esbuild src/index.ts --bundle --minify --platform=node --outfile=dist/tarot-bot/index.js",
     "watch": "npm run clean && tsc && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"tsc -w --preserveWatchOutput\" \"nodemon --delay 100ms dist/tarot-bot/index.js\"",
     "start": "node dist/tarot-bot/index.js",
     "clean": "rimraf dist/tarot-bot",
-    "assets": "copyfiles package.json dist/tarot-bot && copyfiles package-lock.json dist/tarot-bot",
     "lint": "eslint \"**/*.ts\""
   },
   "private": true,
@@ -18,7 +17,7 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "concurrently": "^8.2.0",
-    "copyfiles": "^2.4.1",
+    "esbuild": "^0.19.2",
     "eslint": "^8.45.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^46.4.5",
