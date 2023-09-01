@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "npm run clean && esbuild src/index.ts --bundle --minify --platform=node --outfile=dist/tarot-bot/index.js",
-    "watch": "npm run clean && tsc && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"tsc -w --preserveWatchOutput\" \"nodemon --delay 100ms dist/tarot-bot/index.js\"",
+    "watch": "npm run clean && tsc-watch --onSuccess \"node ./dist/tarot-bot/index.js\" --noClear",
     "start": "node dist/tarot-bot/index.js",
     "clean": "rimraf dist/tarot-bot",
     "lint": "eslint \"**/*.ts\""
@@ -16,14 +16,13 @@
     "@types/node": "^18.17.1",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
-    "concurrently": "^8.2.0",
     "esbuild": "^0.19.2",
     "eslint": "^8.45.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^46.4.5",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "nodemon": "^3.0.1",
     "rimraf": "^5.0.1",
+    "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"
   }
 }
