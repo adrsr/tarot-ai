@@ -9,16 +9,13 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
     "downlevelIteration": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2022",
-    "module": "node16",
+    "isolatedModules": true,
+    "target": "ES2022",
+    "module": "CommonJS",
     "lib": [
-      "es2022",
-      "dom"
+      "ES2022",
+      "DOM"
     ]
   },
   "include": [
