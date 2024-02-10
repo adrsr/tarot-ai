@@ -30,7 +30,11 @@ export class Client {
     });
   }
 
-  async createOrJoinRoom(roomSettings: RoomSettings): Promise<void> {
+  async createOrJoinRoom(room: RoomDto): Promise<void> {
+    const roomSettings: RoomSettings = {
+      roomId: this.getRoomId(room.roomName),
+      ...room,
+    };
     await this.connected$;
     try {
       await this.createRoom(roomSettings);
@@ -86,6 +90,15 @@ export class Client {
         }
       });
     });
+  }
+
+  private getRoomId(roomName: string): string {
+    return roomName
+      .trim()
+      .toLocaleLowerCase()
+      .replace(/(\s|\/|\\|\(|\)|\?|#|'|")/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 
 }

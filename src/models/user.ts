@@ -89,7 +89,7 @@ export const AVATARS = [
   'two-humped-camel',
   'unicorn',
   'whale-bis',
-];
+] as const;
 
 export type Avatar = typeof AVATARS[number];
 
