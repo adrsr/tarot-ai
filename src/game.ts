@@ -1,6 +1,6 @@
 import { ArtificialIntelligence } from './ai';
 import { Client } from './client';
-import { RoomSettings } from './models/dto/create-room.dto';
+import { RoomDto } from './models/dto/create-room.dto';
 import { GameSize } from './models/tarot/game-state';
 import { WinConditionType } from './models/tarot/win-condition';
 import { Avatar } from './models/user';
@@ -14,9 +14,8 @@ export class Game {
     userAvatar: ['robot', 'robot-bis'].map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value)[0] as Avatar,
   });
 
-  private readonly roomSettings: RoomSettings = {
-    roomId: 'ai-test-empty',
-    roomName: 'AI Test Empty',
+  private readonly room: RoomDto  = {
+    roomName: 'AI Test',
     roomPassword: 'AI Password',
     gameSize: this.#gameSize,
     gameWinConditionValue: 10,
@@ -26,7 +25,7 @@ export class Game {
   private readonly ai = new ArtificialIntelligence();
 
   async start(): Promise<void> {
-    await this.client.createOrJoinRoom(this.roomSettings);
+    await this.client.createOrJoinRoom(this.room);
 
     /*
       ON
