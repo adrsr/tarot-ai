@@ -8,10 +8,11 @@ import { Avatar } from './models/user';
 export class Game {
 
   #gameSize: GameSize = 4;
+  #botAvatars: Avatar[] = ['robot', 'robot-bis'];
 
   private readonly client = new Client({
     userPseudo: 'Tarot Bro',
-    userAvatar: ['robot', 'robot-bis'].map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value)[0] as Avatar,
+    userAvatar: this.#botAvatars.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value)[0],
   });
 
   private readonly room: RoomDto  = {
